@@ -1,0 +1,66 @@
+[{
+    "group": "en_mk_de",
+    "engines": [{
+            "engine": "thefreedictionary.com",
+            "language": "en_en",
+            "baseUrl": "https://www.thefreedictionary.com/%s",
+            "alternatives": [{
+                "engine": "Uni Leipzig",
+                "language": "en_en",
+                "baseUrl": "https://corpora.uni-leipzig.de/en/res?word=%s&corpusId=eng_news_2016"
+            }]
+        },
+        {
+            "engine": "recnik.off.net.mk",
+            "language": "en_mk",
+            "baseUrl": "https://recnik.off.net.mk/recnik/angliski-makedonski/%s*",
+            "alternatives": [
+                {
+                    "engine": "Glosbe en_mk",
+                    "language": "en_mk",
+                    "baseUrl": "https://glosbe.com/en/mk/%s"
+                }]
+        },
+        {
+            "engine": "dict.cc",
+            "language": "en_de",
+            "baseUrl": "https://m.dict.cc/?s=%s",
+            "alternatives": []
+        }
+    ]
+},
+{
+    "group": "de_mk_en",
+    "engines": [{
+            "engine": "de.thefreedictionary.com",
+            "language": "de_de",
+            "baseUrl": "https://de.thefreedictionary.com/%s",
+            "alternatives": [{
+                "engine": "duden.de",
+                "language": "de_de",
+                "baseUrl": "https://www.duden.de/rechtschreibung/%s"
+            }]
+        },
+        {
+            "engine": "makedonisch.info",
+            "language": "de_mk",
+            "baseUrl": "http://www.makedonisch.info/search/%s",
+            "alternatives": [{
+                "engine": "recnik.off.net.mk",
+                "language": "de_mk",
+                "baseUrl": "https://recnik.off.net.mk/recnik/germanski-makedonski/%s*",
+                "alternatives": []
+            }]
+        },
+        {
+            "engine": "dict.cc",
+            "language": "de_en",
+            "baseUrl": "https://m.dict.cc/?s=%s",
+            "alternatives": [{
+                "engine": "linguee.de",
+                "language": "de_en",
+                "baseUrl": "https://www.linguee.de/deutsch-englisch/search?source=auto&query=%s"
+            }]
+        }
+    ]
+}]

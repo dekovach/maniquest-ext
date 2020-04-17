@@ -1,0 +1,44 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Multi Search</title>
+  <meta name="description" content="Query multiple search engines in interconnected manner">
+  <meta name="author" content="deKayan">
+
+  <link rel="stylesheet" href="styles.css?v=1.0">
+  <script src="search.js"></script>
+</head>
+
+<body>
+  <form id="search_form" class="search_form">
+    <div class="search_form_content">
+    	<input type="text" id="keyword" class="search_field">
+      <select id="engineGroup">
+        <!-- <option class='head'>Select Search Engines</option> -->
+        <option value='0'>En Mk De</option>
+        <option value='1'>De Mk En</option>
+      </select>
+    	<input type="submit" value="Search">
+    </div>
+  </form>
+  <br/>
+  <div id="engines">
+    <div class="result_panel">
+      <div id="alternative1" class="alternative"></div>
+      <iframe src="about:blank" id="iframe1" seamless></iframe>
+    </div>
+    <div class="result_panel">
+      <div id="alternative2" class="alternative"></div>
+      <iframe src="about:blank" id="iframe2" seamless></iframe>
+    </div>
+    <div class="result_panel">
+      <div id="alternative3" class="alternative"></div>
+      <iframe src="about:blank" id="iframe3" seamless></iframe>
+    </div>
+  </div>
+
+</body>
+</html>
