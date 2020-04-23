@@ -48,8 +48,12 @@
             "alternatives": [{
                 "engine": "recnik.off.net.mk",
                 "language": "de_mk",
-                "baseUrl": "https://recnik.off.net.mk/recnik/germanski-makedonski/%s*",
-                "alternatives": []
+                "baseUrl": "https://recnik.off.net.mk/recnik/germanski-makedonski/%s*"
+            },
+            {
+                "engine": "glosbe.com/de/mk",
+                "language": "de_mk",
+                "baseUrl": "https://glosbe.com/de/mk/%s"
             }]
         },
         {
