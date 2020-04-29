@@ -15,11 +15,30 @@
      
       <form>
         <fieldset>
-          <label for="bundle_name">Bundle Name</label>
-          <input type="text" name="bundle_name" id="bundle_name" value="New bundle" class="text ui-widget-content ui-corner-all">
+          <label for="bundle-name">Bundle Name</label>
+          <input type="text" name="bundle-name" id="bundle-name" value="" class="text ui-widget-content ui-corner-all">
           <label for="bundle_keyword">Keyword</label>
-          <input type="text" name="bundle_keyword" id="bundle_keyword" value="mq<your_keyword>" class="text ui-widget-content ui-corner-all">
+          <input type="text" name="bundle-keyword" id="bundle-keyword" value="" class="text ui-widget-content ui-corner-all">
      
+          <!-- Allow form submission with keyboard without duplicating the dialog button -->
+          <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </fieldset>
+      </form>
+    </div>
+
+    <div id="engine-form" title="Search Engine">
+      <p class="validateTips">All form fields are required.</p>
+     
+      <form>
+        <fieldset>
+          <label for="engine-name">Search Engine</label>
+          <input type="text" name="engine-name" id="engine-name" value="" class="text ui-widget-content ui-corner-all">
+          <label for="url">URL</label>
+          <input type="text" name="url" id="url" value="" class="text ui-widget-content ui-corner-all">
+          <label for="alternatives">Alternatives</label>
+          <ul id="alternatives">
+
+          </ul>
           <!-- Allow form submission with keyboard without duplicating the dialog button -->
           <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
         </fieldset>
@@ -33,10 +52,8 @@
       </ul>
       <div id="tabs-1">
         <p>Bundle search engines to query multiples web pages at the same time in one tab.</p>
-        <ul id="groups" class="sortable">
-          <!-- <li class="ui-state-default">Item 1</li> -->
-        </ul>
-        <button id="add_bundle_btn" class="ui-corner-all ui-button">Add New Bundle</button>
+        <button id="add-bundle-btn" class="ui-corner-all ui-button">Add Bundle</button>
+        <div id="bundles-accordion"> </div>
       </div>
       <div id="tabs-2">
         <p>Settings</p>

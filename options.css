@@ -13,10 +13,10 @@
     height: 18px;
 }
 
-.sortable li span {
+/* .sortable li span {
     position: absolute;
     margin-left: -1.3em;
-}
+} */
 
 label,
 input {
@@ -47,4 +47,13 @@ h1 {
 .validateTips {
     border: 1px solid transparent;
     padding: 0.3em;
+}
+
+#bundles-accordion .handle {
+    cursor: move;
+    margin-left: 0.4em;
+} 
+
+span.action-icon {
+    float: right;
 }
