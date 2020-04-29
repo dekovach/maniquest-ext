@@ -1,0 +1,23 @@
+.search-panel iframe {
+	width: 100%;
+	height: calc(100% - 20px);
+}
+
+#add-panel {
+    background-image: url("images/plus.png");
+    width: 64px;
+    height: 64px;
+}
+
+li.search-panel {
+    display: inline-block;
+    width: 200px;
+    height: 300px;
+    background-color: grey;
+    border: solid 1px white;
+    box-sizing: border-box;
+}
+
+span.panel-delete {
+    float: right;
+}
