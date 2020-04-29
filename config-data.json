@@ -1,0 +1,62 @@
+[{
+    "bundle_id": "en_mk_de",
+    "bundle_name": "Eng/Mkd/Deu",
+    "bundle_keyword": "mqen",
+    "bundle_engines": [{
+            "engine": "thefreedictionary.com",
+            "baseUrl": "https://www.thefreedictionary.com/%s",
+            "alternatives": [{
+                "engine": "Uni Leipzig Corpora",
+                "baseUrl": "https://corpora.uni-leipzig.de/en/res?word=%s&corpusId=eng_news_2016"
+            }]
+        },
+        {
+            "engine": "recnik.off.net.mk",
+            "baseUrl": "https://recnik.off.net.mk/recnik/angliski-makedonski/%s*",
+            "alternatives": [
+                {
+                    "engine": "Glosbe en_mk",
+                    "baseUrl": "https://glosbe.com/en/mk/%s"
+                }]
+        },
+        {
+            "engine": "dict.cc",
+            "baseUrl": "https://m.dict.cc/?s=%s",
+            "alternatives": []
+        }
+    ]
+},
+{
+    "bundle_id": "de_mk_en",
+    "bundle_name": "Deu/Mkd/Eng",
+    "bundle_keyword": "mqde",
+    "bundle_engines": [{
+            "engine": "de.thefreedictionary.com",
+            "baseUrl": "https://de.thefreedictionary.com/%s",
+            "alternatives": [{
+                "engine": "duden.de",
+                "baseUrl": "https://www.duden.de/rechtschreibung/%s"
+            }]
+        },
+        {
+            "engine": "makedonisch.info",
+            "baseUrl": "http://www.makedonisch.info/search/%s",
+            "alternatives": [{
+                "engine": "recnik.off.net.mk",
+                "baseUrl": "https://recnik.off.net.mk/recnik/germanski-makedonski/%s*"
+            },
+            {
+                "engine": "glosbe.com/de/mk",
+                "baseUrl": "https://glosbe.com/de/mk/%s"
+            }]
+        },
+        {
+            "engine": "dict.cc",
+            "baseUrl": "https://m.dict.cc/?s=%s",
+            "alternatives": [{
+                "engine": "linguee.de",
+                "baseUrl": "https://www.linguee.de/deutsch-englisch/search?source=auto&query=%s"
+            }]
+        }
+    ]
+}]
