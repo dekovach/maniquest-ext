@@ -4,7 +4,7 @@ chrome.runtime.onInstalled.addListener(function() {
     saveSearchEngines();
 });
 
-function saveSearchEngines(){
+function saveSearchEngines() {
 	fetch("config-data.json")
 		.then(response => response.json())
 		.then(json => {

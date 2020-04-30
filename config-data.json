@@ -1,62 +1,76 @@
-[{
-    "bundle_id": "en_mk_de",
-    "bundle_name": "Eng/Mkd/Deu",
-    "bundle_keyword": "mqen",
-    "bundle_engines": [{
-            "engine": "thefreedictionary.com",
-            "url": "https://www.thefreedictionary.com/%s",
-            "alternatives": [{
-                "engine": "Uni Leipzig Corpora",
-                "url": "https://corpora.uni-leipzig.de/en/res?word=%s&corpusId=eng_news_2016"
-            }]
-        },
-        {
-            "engine": "recnik.off.net.mk",
-            "url": "https://recnik.off.net.mk/recnik/angliski-makedonski/%s*",
-            "alternatives": [
+[
+    {
+        "bundle_id": "en_mk_de",
+        "bundle_name": "Eng/Mkd/Deu",
+        "bundle_keyword": "mqen",
+        "bundle_engines": [
+            [
+                {
+                    "engine": "thefreedictionary.com",
+                    "url": "https://www.thefreedictionary.com/%s"
+                },
+                {
+                    "engine": "Uni Leipzig Corpora",
+                    "url": "https://corpora.uni-leipzig.de/en/res?word=%s&corpusId=eng_news_2016"
+                }
+            ],
+            [
+                {
+                    "engine": "recnik.off.net.mk",
+                    "url": "https://recnik.off.net.mk/recnik/angliski-makedonski/%s*"
+                },
                 {
                     "engine": "Glosbe en_mk",
                     "url": "https://glosbe.com/en/mk/%s"
-                }]
-        },
-        {
-            "engine": "dict.cc",
-            "url": "https://m.dict.cc/?s=%s",
-            "alternatives": []
-        }
-    ]
-},
-{
-    "bundle_id": "de_mk_en",
-    "bundle_name": "Deu/Mkd/Eng",
-    "bundle_keyword": "mqde",
-    "bundle_engines": [{
-            "engine": "de.thefreedictionary.com",
-            "url": "https://de.thefreedictionary.com/%s",
-            "alternatives": [{
-                "engine": "duden.de",
-                "url": "https://www.duden.de/rechtschreibung/%s"
-            }]
-        },
-        {
-            "engine": "makedonisch.info",
-            "url": "http://www.makedonisch.info/search/%s",
-            "alternatives": [{
-                "engine": "recnik.off.net.mk",
-                "url": "https://recnik.off.net.mk/recnik/germanski-makedonski/%s*"
-            },
-            {
-                "engine": "glosbe.com/de/mk",
-                "url": "https://glosbe.com/de/mk/%s"
-            }]
-        },
-        {
-            "engine": "dict.cc",
-            "url": "https://m.dict.cc/?s=%s",
-            "alternatives": [{
-                "engine": "linguee.de",
-                "url": "https://www.linguee.de/deutsch-englisch/search?source=auto&query=%s"
-            }]
-        }
-    ]
-}]
+                }
+            ],
+            [
+                {
+                    "engine": "dict.cc",
+                    "url": "https://m.dict.cc/?s=%s"
+                }
+            ]
+        ]
+    },
+    {
+        "bundle_id": "de_mk_en",
+        "bundle_name": "Deu/Mkd/Eng",
+        "bundle_keyword": "mqde",
+        "bundle_engines": [
+            [
+                {
+                    "engine": "de.thefreedictionary.com",
+                    "url": "https://de.thefreedictionary.com/%s"
+                },
+                {
+                    "engine": "duden.de",
+                    "url": "https://www.duden.de/rechtschreibung/%s"
+                }
+            ],
+            [
+                {
+                    "engine": "makedonisch.info",
+                    "url": "http://www.makedonisch.info/search/%s"
+                },
+                {
+                    "engine": "recnik.off.net.mk",
+                    "url": "https://recnik.off.net.mk/recnik/germanski-makedonski/%s*"
+                },
+                {
+                    "engine": "glosbe.com/de/mk",
+                    "url": "https://glosbe.com/de/mk/%s"
+                }
+            ],
+            [
+                {
+                    "engine": "dict.cc",
+                    "url": "https://m.dict.cc/?s=%s"
+                },
+                {
+                    "engine": "linguee.de",
+                    "url": "https://www.linguee.de/deutsch-englisch/search?source=auto&query=%s"
+                }
+            ]
+        ]
+    }
+]

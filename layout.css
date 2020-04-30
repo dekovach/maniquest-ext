@@ -1,23 +1,86 @@
+.l-box {
+    margin-left: 1em;
+}
+
 .search-panel iframe {
-	width: 100%;
-	height: calc(100% - 20px);
+    width: 100%;
+    height: calc(100% - 20px);
 }
 
-#add-panel {
-    background-image: url("images/plus.png");
-    width: 64px;
-    height: 64px;
+#search-panels {
+    height: 90vh;
 }
 
-li.search-panel {
-    display: inline-block;
-    width: 200px;
-    height: 300px;
-    background-color: grey;
-    border: solid 1px white;
-    box-sizing: border-box;
+.search-panel {
+    height: 100%;
+    float: left;
 }
 
 span.panel-delete {
+    float: right;
+}
+
+.split-1-1 {
+    width: 100%;
+}
+
+.split-1-2 {
+    width: calc(50% - 1.6em);
+}
+
+.split-1-3 {
+    width: calc(33.333% - 1.6em);
+}
+
+.split-1-4 {
+    width: calc(25% - 1.6em);
+}
+
+.split-1-5 {
+    width: calc(20% - 1.6em);
+}
+
+.ui-state-highlight {
+    height: 90vh;
+}
+
+.panel-header {
+    display: block;
+    cursor: move;
+    position: relative;
+    margin: 2px 0 0 0;
+    padding: 0.5em .5em .5em .7em;
+    font-size: 100%;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+}
+
+.panel-content {
+    height: 100%;
+    border-bottom-right-radius: 3px;
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #333333;
+}
+
+.sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sortable li {
+    margin: 0 3px 3px 3px;
+    padding: 0.4em;
+    padding-left: 1.5em;
+    font-size: 1.4em;
+    height: 18px;
+}
+
+span.action-icon {
+    float: right;
+}
+
+#bundle-header .action-button {
     float: right;
 }

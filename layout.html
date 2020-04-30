@@ -14,42 +14,36 @@
     <script type="text/javascript" src="assets/jquery/jquery-ui/jquery-ui.js"></script>
     <script src="layout.js"></script>
 
-    <link rel="stylesheet" href="assets/purecss/base-min.css">
-    <link rel="stylesheet" href="assets/purecss/grids-min.css">
-    <link rel="stylesheet" href="assets/purecss/grids-responsive-min.css">
     <link rel="stylesheet" href="layout.css">
 </head>
 
 <body>
-    <form id="config_form" class="">
-        <div class="">
-            <label for="bundle-select">Bundle</label>
-            <select id="bundle-select">
-                <!-- <option class='head'>Select Search Engines</option> -->
-                <option value='0'>New Bundle...</option>
-            </select>
-        </div>
-    </form>
+    <div id="bundle-header" class="">
+        <label for="bundle-select">Bundle</label>
+        <select id="bundle-select">
+        </select>
+        <label for="bundle-id">Bundle Id</label>
+        <input type="text" name="bundle-id" id="bundle-id" value="" class="" />
+        <label for="bundle-keyword">Keyword</label>
+        <input type="text" name="bundle-keyword" id="bundle-keyword" value="" class="" />
+        <button id="add-panel" class="">Add Panel</button>
+        <button class="action-button ui-button ui-widget ui-corner-all">Save Bundle Config</button>
+        <button class="action-button ui-button ui-widget ui-corner-all">Cancel</button>
+    </div>
     <br />
-    <div id="engines" class="pure-g">
-        <ul id="search-panels" class="pure-22-24">
-            <li class="search-panel pure-u-11-24 ui-state-default">
-                <span class="handle ui-icon ui-icon-arrow-4-diag"></span>
-                <button class="ui-button ui-widget ui-corner-all ui-button-icon-only" title="Delete Panel">
-                    <span class="panel-delete ui-icon ui-icon-trash"></span>
-                </button>
+    <div id="engines" class="">
+        <div id="search-panels" class="split-1-1">
+            <!-- <div class="search-panel split-1-2 l-box ui-header-reset">
+                <h3 class="panel-header ui-corner-top ui-state-default">
+                    <button class="ui-button ui-widget ui-corner-all ui-button-icon-only" title="Delete Panel">
+                        <span class="panel-delete ui-icon ui-icon-trash"></span>
+                    </button>
+                </h3>
                 <div id="alternative-1" class="alternative"></div>
-            </li>
-            <li class="search-panel pure-u-11-24 ui-state-default">
-                <span class="handle ui-icon ui-icon-arrow-4-diag"></span>
-                <button class="ui-button ui-widget ui-corner-all ui-button-icon-only" title="Delete Panel">
-                    <span class="panel-delete ui-icon ui-icon-trash"></span>
-                </button>
-                <div id="alternative-2" class="alternative"></div>
-            </li>
-        </ul>
-        <div class="new-panel pure-u-2-24">
-            <div id="add-panel"></div>
+                <div class="panel-content">
+                    <p>One</p>
+                </div>
+            </div> -->
         </div>
     </div>
 
