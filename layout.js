@@ -63,19 +63,11 @@ $(document).ready(function () {
         var numPanels = bundle.bundle_engines.length;
         for (var i = 0; i < numPanels; i++) {
             var engs = bundle.bundle_engines[i];
-            var bundleEl = $(
-                `<div class="search-panel split-1-${numPanels} l-box ui-header-reset">` +
-                '    <h3 class="panel-header ui-corner-top ui-state-default">' +
-                '        <span class="panel-delete action-icon ui-icon ui-icon-trash"></span>' +
-                i +
-                '    </h3>' +
-                '    <div class="panel-content">' +
-                '         <button id="add-engine-btn" class="ui-corner-all ui-button">Add</button>' +
-                '        ' + getEnginesList(i, engs) +
-                '    </div>' +
-                '</div>');
+            var bundleEl = createPanel(i, numPanels);
             $("#search-panels").append(bundleEl);
-            $(bundleEl).find('#engines-sortable-' + i).sortable({
+            var enginesListEl = createEnginesList(i, engs);
+            bundleEl.find(".panel-content").append(enginesListEl);
+            enginesListEl.sortable({
                 handle: '.handle'
             }).disableSelection();
         }
@@ -88,7 +80,21 @@ $(document).ready(function () {
         panelsSortable.sortable("refresh")
     }
 
-    function getEnginesList(index, engines) {
+    function createPanel(index, numPanels) {
+        var bundleEl = $(
+            `<div class="search-panel split-1-${numPanels} l-box ui-header-reset">` +
+            '    <h3 class="panel-header ui-corner-top ui-state-default">' +
+            '        <span class="panel-delete action-icon ui-icon ui-icon-trash"></span>' +
+            index +
+            '    </h3>' +
+            '    <div class="panel-content">' +
+            '         <button id="add-engine-btn" class="ui-corner-all ui-button">Add</button>' +
+            '    </div>' +
+            '</div>');
+        return bundleEl;
+    }
+
+    function createEnginesList(index, engines) {
         var res = '<ul id="engines-sortable-' + index + '" class="sortable">';
         for (eng in engines) {
             res += '<li class="ui-state-default" ' +
@@ -101,7 +107,7 @@ $(document).ready(function () {
                 '</li>';
         }
         res += '</ul>';
-        return res;
+        return $(res);
     }
 
     restoreOptions();
@@ -110,9 +116,11 @@ $(document).ready(function () {
         icon: "ui-icon-plus"
     }).on("click", function (event) {
         event.preventDefault();
-        if (self.model.getBundle().bundle_engines.length < 5) {
-            self.model.getBundle().bundle_engines.push([]);
-            updatePanelsView();
+        var numPanels = $(".search-panel").length;
+        if (numPanels < 5) {
+            var newPanel = createPanel(numPanels, numPanels+1);
+            $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels+1}`, 1000);
+            $("#search-panels").append(newPanel);
         } else {
             alert("Maximum number of search panels is 5.")
         }
