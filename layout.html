@@ -23,9 +23,10 @@
         <select id="bundle-select">
         </select>
         <label for="bundle-id">Bundle Id</label>
-        <input type="text" name="bundle-id" id="bundle-id" value="" class="" />
+        <input type="text" name="bundle-id" id="bundle-id" value="" class="text ui-widget-content ui-corner-all" />
         <label for="bundle-keyword">Keyword</label>
-        <input type="text" name="bundle-keyword" id="bundle-keyword" value="" class="" />
+        <input type="text" name="bundle-keyword" id="bundle-keyword" value=""
+            class="text ui-widget-content ui-corner-all" />
         <button id="add-panel" class="">Add Panel</button>
         <button class="action-button ui-button ui-widget ui-corner-all">Save Bundle Config</button>
         <button class="action-button ui-button ui-widget ui-corner-all">Cancel</button>
@@ -45,6 +46,21 @@
                 </div>
             </div> -->
         </div>
+    </div>
+
+    <div id="engine-form" title="Create new engine">
+        <p class="validateTips">All form fields are required.</p>
+        <form>
+            <fieldset>
+                <label for="engine">Search Engine</label>
+                <input type="text" name="engine" id="engine" value="" class="text ui-widget-content ui-corner-all">
+                <label for="url">URL</label>
+                <input type="text" name="url" id="url" value="" class="text ui-widget-content ui-corner-all">
+
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
     </div>
 
 </body>

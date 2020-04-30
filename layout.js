@@ -63,13 +63,7 @@ $(document).ready(function () {
         var numPanels = bundle.bundle_engines.length;
         for (var i = 0; i < numPanels; i++) {
             var engs = bundle.bundle_engines[i];
-            var bundleEl = createPanel(i, numPanels);
-            $("#search-panels").append(bundleEl);
-            var enginesListEl = createEnginesList(i, engs);
-            bundleEl.find(".panel-content").append(enginesListEl);
-            enginesListEl.sortable({
-                handle: '.handle'
-            }).disableSelection();
+            var bundleEl = createPanel(i, numPanels, $("#search-panels"), engs);
         }
 
         // $("span.edit-engine").on("click", function(event) {
@@ -80,7 +74,7 @@ $(document).ready(function () {
         panelsSortable.sortable("refresh")
     }
 
-    function createPanel(index, numPanels) {
+    function createPanel(index, numPanels, container, engines = []) {
         var bundleEl = $(
             `<div class="search-panel split-1-${numPanels} l-box ui-header-reset">` +
             '    <h3 class="panel-header ui-corner-top ui-state-default">' +
@@ -88,26 +82,38 @@ $(document).ready(function () {
             index +
             '    </h3>' +
             '    <div class="panel-content">' +
-            '         <button id="add-engine-btn" class="ui-corner-all ui-button">Add</button>' +
+            '         <button class="add-engine-btn ui-corner-all ui-button">Add</button>' +
             '    </div>' +
             '</div>');
-        return bundleEl;
+        // return bundleEl;
+
+        container.append(bundleEl);
+        var enginesListEl = createEnginesList(index, engines);
+        bundleEl.find(".panel-content").append(enginesListEl);
+        enginesListEl.sortable({
+            handle: '.handle'
+        }).disableSelection();
     }
 
     function createEnginesList(index, engines) {
         var res = '<ul id="engines-sortable-' + index + '" class="sortable">';
         for (eng in engines) {
-            res += '<li class="ui-state-default" ' +
-                'data-url="' + engines[eng].url + '" ' +
-                'data-name="' + engines[eng].engine + '" >' +
-                '    <span>' + engines[eng].engine + '</span>' +
-                '    <span class="handle action-icon ui-icon ui-icon-grip-dotted-vertical"></span>' +
-                '    <span class="edit-engine action-icon ui-icon ui-icon-pencil"></span>' +
-                '    <span class="remove-engine action-icon ui-icon ui-icon-trash"></span>' +
-                '</li>';
+            res += createEngineListitem(engines[eng].engine, engines[eng].url);
         }
         res += '</ul>';
         return $(res);
+    }
+
+    function createEngineListitem(engine, url) {
+        var res = '<li class="ui-state-default" ' +
+            'data-url="' + url + '" ' +
+            'data-engine="' + engine + '" >' +
+            '    <span>' + engine + '</span>' +
+            '    <span class="handle action-icon ui-icon ui-icon-grip-dotted-vertical"></span>' +
+            '    <span class="edit-engine action-icon ui-icon ui-icon-pencil"></span>' +
+            '    <span class="remove-engine action-icon ui-icon ui-icon-trash"></span>' +
+            '</li>';
+        return res;
     }
 
     restoreOptions();
@@ -118,12 +124,70 @@ $(document).ready(function () {
         event.preventDefault();
         var numPanels = $(".search-panel").length;
         if (numPanels < 5) {
-            var newPanel = createPanel(numPanels, numPanels+1);
-            $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels+1}`, 1000);
-            $("#search-panels").append(newPanel);
+            var newPanel = createPanel(numPanels, numPanels + 1, $("#search-panels"));
+            $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels + 1}`, 1000);
+
+            // $("#search-panels").append(newPanel);
         } else {
             alert("Maximum number of search panels is 5.")
         }
     });
+
+    $("#search-panels").on("click", ".panel-delete", function (event) {
+        // remove panel
+        var numPanels = $(".search-panel").length;
+        if (numPanels > 2) {
+            $(event.target).closest(".search-panel").remove();
+            $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels - 1}`, 1000);
+        } else {
+            alert("Minimum number of search panels is 2.");
+        }
+    });
+
+    $("#search-panels").on("click", "button.add-engine-btn", function (event) {
+        $(event.target).next("ul.sortable").addClass("target");
+        engineDialog.dialog("open");
+        event.stopPropagation();
+        event.preventDefault();
+    });
+
+    $("#search-panels").on("click", ".edit-engine", function (event) {
+        var engineElem = $(this).parent();
+        $("#engine").val(engineElem.data("engine"));
+        $("#url").val(engineElem.data("url"));
+
+        engineDialog.dialog("open");
+        event.stopPropagation();
+        event.preventDefault();
+    });
+
+    var engineDialog = $("#engine-form").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true,
+        buttons: {
+            "OK": addEngine,
+            Cancel: function () {
+                engineDialog.dialog("close");
+            }
+        },
+        close: function () {
+            form[0].reset();
+        }
+    });
+
+    var form = engineDialog.find("form").on("submit", function (event) {
+        event.preventDefault();
+        addEngine();
+    });
+
+    function addEngine(event) {
+        var engine = $("#engine").val();
+        var url = $("url").val();
+        var liEl = createEngineListitem(engine, url);
+        $("ul.target").append($(liEl)).removeClass("target");
+        engineDialog.dialog("close");
+    }
 
 });
