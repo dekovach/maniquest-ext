@@ -5,6 +5,12 @@ $(document).ready(function () {
         selectedBundleIndex: 0,
         getBundle: function () {
             return this.bundles[this.selectedBundleIndex];
+        },
+
+        persistModel: function() {
+            chrome.storage.local.set({
+                config_data: this.bundles
+            }, function() {});
         }
     }
     // var bundles = [];
@@ -52,6 +58,7 @@ $(document).ready(function () {
     function updateBundleHeader() {
         var bundle = self.model.getBundle();
         $("#bundle-id").val(bundle.bundle_id);
+        $("#bundle-name").val(bundle.bundle_name);
         $("#bundle-keyword").val(bundle.bundle_keyword);
     }
 
@@ -224,6 +231,7 @@ $(document).ready(function () {
             height: "auto",
             width: 400,
             modal: true,
+            autoOpen: true,
             buttons: {
                 "Delete item": function () {
                     callbackFn();
@@ -235,5 +243,38 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#dialog-confirm").dialog({
+        autoOpen: false
+    });
+
+    $("#save-bundle").click(function (event) {
+        var bundle_id = $("#bundle-id").val();
+        var bundle_name = $("#bundle-name").val();
+        var bundle_keyword = $("#bundle-keyword").val();
+
+        var bundle = self.model.getBundle();
+        bundle.bundle_id = bundle_id;
+        bundle.bundle_name = bundle_name;
+        bundle.bundle_keyword = bundle_keyword;
+
+        var bundle_engines = [];
+
+        $("#search-panels .search-panel").each(function (i, item) {
+            var engines = [];
+            $(item).find("li.engine-item").each(function (j, liElem) {
+                engines.push({
+                    engine: $(liElem).data("engine"),
+                    url: $(liElem).data("url")
+                });
+            });
+            bundle_engines.push(engines);
+        });
+
+        bundle.bundle_engines = bundle_engines;
+
+        // console.log(self.model.bundles);
+        self.model.persistModel();
+    });
 
 });

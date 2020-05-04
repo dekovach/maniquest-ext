@@ -55,6 +55,10 @@ span.panel-delete {
     border-top-left-radius: 3px;
 }
 
+.action-icon {
+    cursor: pointer;
+}
+
 .panel-content {
     height: 100%;
     border-bottom-right-radius: 3px;
