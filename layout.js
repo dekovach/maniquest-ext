@@ -1,8 +1,25 @@
 $(document).ready(function () {
+    const NEW_BUNDLE_OPTION = "new-bundle-option";
+
     var self = this;
     self.model = {
         bundles: [],
         selectedBundleIndex: 0,
+
+        setSelectedBundleIndexByValue: function(value) {
+            this.selectedBundleIndex = this.bundles.findIndex(item => item.bundle_id == value);
+        },
+
+        addEmptyBundle: function() {
+            this.bundles.push({
+                    "bundle_id": "",
+                    "bundle_name": "",
+                    "bundle_keyword": "",
+                    "bundle_engines": [[], []]
+            });
+            this.selectedBundleIndex = this.bundles.length - 1;
+        },
+
         getBundle: function () {
             return this.bundles[this.selectedBundleIndex];
         },
@@ -46,7 +63,11 @@ $(document).ready(function () {
     function changeBundleSelection(event, data) {
         // TODO confirm if changes to be discarted
         var bundleId = data.item.value;
-        self.model.selectedBundleIndex = self.model.bundles.findIndex(item => item.bundle_id == bundleId);
+        if (bundleId == NEW_BUNDLE_OPTION) {
+            self.model.addEmptyBundle();
+        } else {
+            self.model.setSelectedBundleIndexByValue(bundleId);
+        }
         updateBundleHeader();
         updatePanelsView();
     }
@@ -55,6 +76,7 @@ $(document).ready(function () {
         $.each(self.model.bundles, function () {
             bundleSelect.append($("<option />").val(this.bundle_id).text(this.bundle_name));
         });
+        bundleSelect.append( $("<option />").val(NEW_BUNDLE_OPTION).text("New Bundle...") );
     }
 
     function updateBundleHeader() {
@@ -134,7 +156,7 @@ $(document).ready(function () {
         var numPanels = $(".search-panel").length;
         if (numPanels < 5) {
             var newPanel = createPanel(numPanels, numPanels + 1, $("#search-panels"));
-            $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels + 1}`, 1000);
+            $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels + 1}`, 500 /* animation duration */);
 
             // $("#search-panels").append(newPanel);
         } else {
@@ -254,6 +276,16 @@ $(document).ready(function () {
         var bundle_id = $("#bundle-id").val();
         var bundle_name = $("#bundle-name").val();
         var bundle_keyword = $("#bundle-keyword").val();
+
+        var valid = true;
+        valid &= bundle_id.trim().length > 0;
+        valid &= self.model.bundles.every((item) => item.bundle_id != bundle_id);
+        valid &= bundle_name.trim().length > 0;
+
+        if (!valid) {
+            alert("Config can't be saved! \nBundle id and name must be unique and non-empty.");
+            return;
+        }
 
         var bundle = self.model.getBundle();
         bundle.bundle_id = bundle_id;
