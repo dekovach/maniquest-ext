@@ -105,7 +105,7 @@ $(document).ready(function () {
     }
 
     function createEngineListitem(engine, url) {
-        var res = '<li class="ui-state-default" ' +
+        var res = '<li class="engine-item ui-state-default" ' +
             'data-url="' + url + '" ' +
             'data-engine="' + engine + '" >' +
             '    <span class="engine-name">' + engine + '</span>' +
@@ -135,12 +135,21 @@ $(document).ready(function () {
 
     $("#search-panels").on("click", ".panel-delete", function (event) {
         // remove panel
+        var panel = $(event.target).closest(".search-panel");
         var numPanels = $(".search-panel").length;
+        var numEnginesInPanel = panel.find("li.ui-state-default").length;
         if (numPanels > 2) {
-            $(event.target).closest(".search-panel").remove();
-            $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels - 1}`, 1000);
+            if (numEnginesInPanel > 0) {
+                confirmDelete(function () {
+                    panel.remove();
+                    $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels - 1}`, 1000);
+                });
+            } else {
+                panel.remove();
+                $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels - 1}`, 1000);
+            }
         } else {
-            alert("Minimum number of search panels is 2.");
+            alert("Less than 2 panels makes no sense.");
         }
     });
 
@@ -159,6 +168,12 @@ $(document).ready(function () {
         engineDialog.dialog("option", "isEdit", true);
         engineDialog.dialog("option", "engineElem", engineElem);
         engineDialog.dialog("open");
+        event.stopPropagation();
+        event.preventDefault();
+    });
+
+    $("#search-panels").on("click", ".remove-engine", function (event) {
+        $(this).parent().remove();
         event.stopPropagation();
         event.preventDefault();
     });
@@ -201,6 +216,24 @@ $(document).ready(function () {
 
         $("ul.target").removeClass("target");
         engineDialog.dialog("close");
+    }
+
+    function confirmDelete(callbackFn) {
+        $("#dialog-confirm").dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "Delete item": function () {
+                    callbackFn();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
     }
 
 });
