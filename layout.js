@@ -15,6 +15,8 @@ $(document).ready(function () {
     }
     // var bundles = [];
 
+    $("#bundle-header input").addClass("ui-widget ui-widget-content ui-corner-all");
+
     var bundleSelect = $("#bundle-select").selectmenu({
         select: changeBundleSelection
     });

@@ -93,9 +93,19 @@ span.action-icon {
     float: right;
 }
 
+.header-fieldset label,
+.header-fieldset input {
+    display: inline-block;
+}
+
 .ui-dialog label,
 .ui dialog input {
     display: block;
+}
+
+.header-fieldset input.text{
+    margin-bottom: 12px;
+    padding: .4em;
 }
 
 .ui-dialog input.text {
