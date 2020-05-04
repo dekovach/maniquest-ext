@@ -108,7 +108,7 @@ $(document).ready(function () {
         var res = '<li class="ui-state-default" ' +
             'data-url="' + url + '" ' +
             'data-engine="' + engine + '" >' +
-            '    <span>' + engine + '</span>' +
+            '    <span class="engine-name">' + engine + '</span>' +
             '    <span class="handle action-icon ui-icon ui-icon-grip-dotted-vertical"></span>' +
             '    <span class="edit-engine action-icon ui-icon ui-icon-pencil"></span>' +
             '    <span class="remove-engine action-icon ui-icon ui-icon-trash"></span>' +
@@ -146,6 +146,7 @@ $(document).ready(function () {
 
     $("#search-panels").on("click", "button.add-engine-btn", function (event) {
         $(event.target).next("ul.sortable").addClass("target");
+        engineDialog.dialog("option", "isEdit", false);
         engineDialog.dialog("open");
         event.stopPropagation();
         event.preventDefault();
@@ -155,7 +156,8 @@ $(document).ready(function () {
         var engineElem = $(this).parent();
         $("#engine").val(engineElem.data("engine"));
         $("#url").val(engineElem.data("url"));
-
+        engineDialog.dialog("option", "isEdit", true);
+        engineDialog.dialog("option", "engineElem", engineElem);
         engineDialog.dialog("open");
         event.stopPropagation();
         event.preventDefault();
@@ -167,7 +169,7 @@ $(document).ready(function () {
         width: 350,
         modal: true,
         buttons: {
-            "OK": addEngine,
+            "OK": addEditEngine,
             Cancel: function () {
                 engineDialog.dialog("close");
             }
@@ -179,14 +181,25 @@ $(document).ready(function () {
 
     var form = engineDialog.find("form").on("submit", function (event) {
         event.preventDefault();
-        addEngine();
+        addEditEngine();
     });
 
-    function addEngine(event) {
+    function addEditEngine(event) {
         var engine = $("#engine").val();
-        var url = $("url").val();
-        var liEl = createEngineListitem(engine, url);
-        $("ul.target").append($(liEl)).removeClass("target");
+        var url = $("#url").val();
+
+        var isEdit = engineDialog.dialog("option", "isEdit");
+        if (isEdit) {
+            var engineElem = engineDialog.dialog("option", "engineElem");
+            engineElem.data("engine", engine);
+            engineElem.data("url", url);
+            engineElem.find("span.engine-name").text(engine);
+        } else {
+            var liEl = createEngineListitem(engine, url);
+            $("ul.target").append($(liEl));
+        }
+
+        $("ul.target").removeClass("target");
         engineDialog.dialog("close");
     }
 
