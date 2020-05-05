@@ -2,68 +2,7 @@ $(document).ready(function () {
     const NEW_BUNDLE_OPTION = "new-bundle-option";
 
     var self = this;
-    self.model = {
-        bundles: [],
-        selectedBundleIndex: -1,
-        pendingChanges: false,
-
-        setBundles: function (bundles, index = -1) {
-            if (bundles && bundles.length > 0) {
-                this.bundles = bundles;
-                index = Math.min(this.bundles.length - 1, index);
-                // index = Math.max(0, index);
-                this.selectedBundleIndex = index;
-            }
-            // } else {
-            //     this.addEmptyBundle();
-            // }
-
-        },
-
-        setSelectedBundleIndexByValue: function (value) {
-            this.selectedBundleIndex = this.bundles.findIndex(item => item.bundle_id == value);
-        },
-
-        addEmptyBundle: function () {
-            this.bundles.push({
-                "bundle_id": "",
-                "bundle_name": "",
-                "bundle_keyword": "",
-                "bundle_engines": [[], []]
-            });
-            this.selectedBundleIndex = this.bundles.length - 1;
-        },
-
-        removeEmptyBundle: function () {
-            var len = this.bundles.length;
-            if (len > 0 && this.bundles[len-1].bundle_id == "") {
-                this.bundles.pop();
-            }
-        },
-
-        getBundle: function () {
-            if (this.selectedBundleIndex > -1) {
-                return this.bundles[this.selectedBundleIndex];
-            } else {
-                return null;
-            }
-        },
-
-        removeBundle: function () {
-            this.bundles.splice(this.selectedBundleIndex, 1);
-            this.selectedBundleIndex = -1;
-            // if (this.bundles.length == 0) {
-            //     this.addEmptyBundle();
-            // } 
-        },
-
-        persistModel: function () {
-            chrome.storage.local.set({
-                config_data: this.bundles
-            }, function () { });
-        }
-    }
-    // var bundles = [];
+    self.model = new ManiModel();
 
     $("#bundle-header input").addClass("ui-widget ui-widget-content ui-corner-all");
 
@@ -82,8 +21,7 @@ $(document).ready(function () {
                 self.model.persistModel();
                 restoreOptions();
             }
-        },
-
+        }
     });
 
     bundleActionSelect.enableOption = function(optionValue) {
@@ -109,10 +47,8 @@ $(document).ready(function () {
     }).disableSelection();
 
     function restoreOptions(index) {
-        chrome.storage.local.get({
-            config_data: []
-        }, function (data) {
-            self.model.setBundles(data.config_data, index);
+        self.model.loadModel(function() {
+            self.model.setSelectedBundleIndex(index);
             togglePendingChangesFlag(false);
             updateView();
         });
