@@ -156,6 +156,7 @@ $(document).ready(function () {
         bundleEl.find(".panel-content").append(enginesListEl);
         enginesListEl.sortable({
             handle: '.handle',
+            connectWith: '.engines-sortable',
             update: function(event, ui) {
                 togglePendingChangesFlag(true);
             }
@@ -163,7 +164,7 @@ $(document).ready(function () {
     }
 
     function createEnginesList(index, engines) {
-        var res = '<ul id="engines-sortable-' + index + '" class="sortable">';
+        var res = '<ul id="engines-sortable-' + index + '" class="engines-sortable sortable">';
         for (eng in engines) {
             res += createEngineListitem(engines[eng].engine, engines[eng].url);
         }
