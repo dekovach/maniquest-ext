@@ -5,6 +5,7 @@ $(document).ready(function () {
     self.model = {
         bundles: [],
         selectedBundleIndex: -1,
+        pendingChanges: false,
 
         setBundles: function (bundles, index = -1) {
             if (bundles && bundles.length > 0) {
@@ -100,7 +101,11 @@ $(document).ready(function () {
     var panelsSortable = $("#search-panels").sortable({
         axis: "x",
         handle: "h3.panel-header",
-        containment: "#search-panels"
+        containment: "#search-panels",
+        update: function (event, ui) {
+            togglePendingChangesFlag(true);
+            console.log("panel changed");
+        }
     }).disableSelection();
 
     function restoreOptions(index) {
@@ -108,6 +113,7 @@ $(document).ready(function () {
             config_data: []
         }, function (data) {
             self.model.setBundles(data.config_data, index);
+            togglePendingChangesFlag(false);
             updateView();
         });
     }
@@ -129,16 +135,23 @@ $(document).ready(function () {
     function changeBundleSelection(event, data) {
         // TODO confirm if changes to be discarted
         var bundleId = data.item.value;
-        if (bundleId == NEW_BUNDLE_OPTION) {
-            self.model.addEmptyBundle();
-            bundleActionSelect.disableOption("delete-config");
+        if (self.model.pendingChanges) {
+            alert("You have unsaved config changes. Save them or cancel them first.");
+            bundleSelect.val($.data(this, "current-option"));
+            bundleSelect.selectmenu("refresh");
         } else {
-            self.model.removeEmptyBundle();
-            self.model.setSelectedBundleIndexByValue(bundleId);
-            bundleActionSelect.enableOption("delete-config");
+            if (bundleId == NEW_BUNDLE_OPTION) {
+                self.model.addEmptyBundle();
+                bundleActionSelect.disableOption("delete-config");
+            } else {
+                self.model.removeEmptyBundle();
+                self.model.setSelectedBundleIndexByValue(bundleId);
+                bundleActionSelect.enableOption("delete-config");
+            }
+            updateBundleHeader();
+            updatePanelsView();
+            bundleSelect.data("current-option", bundleId);
         }
-        updateBundleHeader();
-        updatePanelsView();
     }
     
     function updateBundleSelect() {
@@ -148,6 +161,8 @@ $(document).ready(function () {
             bundleSelect.append($("<option />").val(this.bundle_id).text(this.bundle_name));
         });
         bundleSelect.append($("<option />").val(NEW_BUNDLE_OPTION).text("New Bundle..."));
+       var bundle = self.model.getBundle();
+       if (bundle) bundleSelect.data("current-option", bundle.bundle_id);
      }
 
     function updateBundleHeader() {
@@ -192,7 +207,7 @@ $(document).ready(function () {
             `<div class="search-panel split-1-${numPanels} l-box ui-header-reset">` +
             '    <h3 class="panel-header ui-corner-top ui-state-default">' +
             '        <span class="panel-delete action-icon ui-icon ui-icon-trash"></span>' +
-            index +
+            `Panel ${index}` +
             '    </h3>' +
             '    <div class="panel-content">' +
             '         <button class="add-engine-btn ui-corner-all ui-button">Add</button>' +
@@ -204,7 +219,10 @@ $(document).ready(function () {
         var enginesListEl = createEnginesList(index, engines);
         bundleEl.find(".panel-content").append(enginesListEl);
         enginesListEl.sortable({
-            handle: '.handle'
+            handle: '.handle',
+            update: function(event, ui) {
+                togglePendingChangesFlag(true);
+            }
         }).disableSelection();
     }
 
@@ -239,7 +257,7 @@ $(document).ready(function () {
         if (numPanels < 5) {
             var newPanel = createPanel(numPanels, numPanels + 1, $("#search-panels"));
             $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels + 1}`, 500 /* animation duration */);
-
+            togglePendingChangesFlag(true);
             // $("#search-panels").append(newPanel);
         } else {
             alert("Maximum number of search panels is 5.")
@@ -256,6 +274,7 @@ $(document).ready(function () {
                 confirmDelete(function () {
                     panel.remove();
                     $(".search-panel").switchClass(`split-1-${numPanels}`, `split-1-${numPanels - 1}`, 1000);
+                    togglePendingChangesFlag(true);
                 });
             } else {
                 panel.remove();
@@ -272,6 +291,8 @@ $(document).ready(function () {
         engineDialog.dialog("open");
         event.stopPropagation();
         event.preventDefault();
+        
+        togglePendingChangesFlag(true);
     });
 
     $("#search-panels").on("click", ".edit-engine", function (event) {
@@ -289,6 +310,8 @@ $(document).ready(function () {
         $(this).parent().remove();
         event.stopPropagation();
         event.preventDefault();
+
+        togglePendingChangesFlag(true);
     });
 
     var engineDialog = $("#engine-form").dialog({
@@ -329,6 +352,8 @@ $(document).ready(function () {
 
         $("ul.target").removeClass("target");
         engineDialog.dialog("close");
+
+        togglePendingChangesFlag(true);
     }
 
     function confirmDelete(callbackFn) {
@@ -402,5 +427,20 @@ $(document).ready(function () {
         }
         restoreOptions();
     });
+
+    /* Detect changes made to a config and prevent unintentional discarting */
+    $("#config-form-fieldset input").on("input", function() {
+        togglePendingChangesFlag(true);
+    })
+
+    function togglePendingChangesFlag(value) {
+        if (value) {
+            self.model.pendingChanges = true;
+            $("#save-bundle-config").button("enable");
+        } else {
+            self.model.pendingChanges = false;
+            $("#save-bundle-config").button("disable");
+        }
+    }
 
 });
