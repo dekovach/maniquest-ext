@@ -5,6 +5,7 @@
 .search-panel iframe {
     width: 100%;
     height: calc(100% - 20px);
+    border: none;
 }
 
 #search-panels {
@@ -89,11 +90,17 @@ span.action-icon {
     float: right;
 }
 
-.header-left{
+.header-left {
     float: left;
 }
 
-#config-action-buttonset {
+.header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.header-right {
     float: right;
 }
 
@@ -144,4 +151,8 @@ h1 {
 .validateTips {
     border: 1px solid transparent;
     padding: 0.3em;
+}
+
+#query {
+    width: 20em;
 }

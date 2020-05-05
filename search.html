@@ -1,6 +1,7 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
 
@@ -8,24 +9,30 @@
   <meta name="description" content="Query multiple search engines in interconnected manner">
   <meta name="author" content="deKayan">
 
-  <link rel="stylesheet" href="styles.css?v=1.0">
+  <link rel="stylesheet" href="assets/jquery/jquery-ui/jquery-ui.css" />
+  <script type="text/javascript" src="assets/jquery/jquery.js"></script>
+  <script type="text/javascript" src="assets/jquery/jquery-ui/jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="layout.css">
+
+  <script src="manimodel.js"></script>
   <script src="search.js"></script>
 </head>
 
 <body>
-  <form id="search_form" class="search_form">
+  <!-- <form id="search_form" class="search_form">
     <div class="search_form_content">
-    	<input type="text" id="keyword" class="search_field">
+      <input type="text" id="keyword" class="search_field">
       <select id="engineGroup">
-        <!-- <option class='head'>Select Search Engines</option> -->
         <option value='0'>En Mk De</option>
         <option value='1'>De Mk En</option>
       </select>
-    	<input type="submit" value="Search">
+      <input type="submit" value="Search">
     </div>
   </form>
-  <br/>
-  <div id="engines">
+  <br /> -->
+  <!-- <div id="engines">
     <div class="result_panel">
       <div id="alternative1" class="alternative"></div>
       <iframe src="about:blank" id="iframe1" seamless></iframe>
@@ -38,7 +45,39 @@
       <div id="alternative3" class="alternative"></div>
       <iframe src="about:blank" id="iframe3" seamless></iframe>
     </div>
+  </div> -->
+
+  <div id="bundle-header" class="header-fieldset">
+    <fieldset class="header-left">
+      <label for="bundle-select">Bundle</label>
+      <select id="bundle-select">
+      </select>
+    </fieldset>
+    <fieldset id="search-form-fieldset" class="header-center">
+      <input type="text" name="query" id="query" value="" class="text ui-widget-content ui-corner-all" />
+      <button id="search-button" class="">Search</button>
+    </fieldset>
+    <fieldset id="config-action-buttonset" class="header-right">
+      <button id="bundle-config" class="action-button ui-button ui-icon-only ui-widget ui-corner-all ui-icon-gear"></button>
+    </fieldset>
+  </div>
+  <br />
+  <div id="engines" class="">
+    <div id="search-panels" class="split-1-1">
+      <!-- <div class="search-panel split-1-2 l-box ui-header-reset">
+            <h3 class="panel-header ui-corner-top ui-state-default">
+                <button class="ui-button ui-widget ui-corner-all ui-button-icon-only" title="Delete Panel">
+                    <span class="panel-delete ui-icon ui-icon-trash"></span>
+                </button>
+            </h3>
+            <div id="alternative-1" class="alternative"></div>
+            <div class="panel-content">
+                <p>One</p>
+            </div>
+        </div> -->
+    </div>
   </div>
 
 </body>
+
 </html>

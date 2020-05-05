@@ -1,91 +1,125 @@
-var engines = [];
-window.onload = init;
+$(document).ready(function () {
 
-function init(){
-	var searchForm = document.getElementById("search_form");
-	searchForm.addEventListener("submit", function(event) {
-		event.preventDefault();
-		search();
-	})
-	
-	loadSearchEngines();
-	addFocusShortcut();
-	focusAndSelectSearch();
-}
+	var self = this;
+	this.model = new ManiModel();
 
-function search(){
-	var keyword = document.getElementById("keyword").value;
-	var engineGroupId = parseInt(document.getElementById("engineGroup").value);
-	var queryEngines = engines[engineGroupId].engines;
-	var enginesDOM = document.getElementById("engines");
-	
-	for (var i = 1; i<=3; i++) {
-		var altDOM = document.getElementById("alternative" + i);
-		altDOM.innerHTML = "<span>More: </span>";
-		for (var j = 0; j<queryEngines[i-1].alternatives.length; j++) {
-			var a = document.createElement("a");
-			var alt = queryEngines[i-1].alternatives[j];
-			a.href = queryEngines[i-1].alternatives[j].baseUrl.replace("%s", keyword);
-			a.innerHTML = alt.engine;
-			a.target = "about:blank";
-			altDOM.appendChild(a);
-		}
-		var ifrm = document.getElementById("iframe"+i)
-		ifrm.src = queryEngines[i-1].baseUrl.replace("%s", keyword);
-		// ifrm.contentWindow.console.log= function() { /* nop to suppress logs from iframes */ };
-	}
+	var bundleSelect = $("#bundle-select").selectmenu({
+		select: changeBundleSelection
+	});
 
-	updateURLSearchParams(keyword, engines[engineGroupId].group);
-}
+	$("#bundle-header input").addClass("ui-widget ui-widget-content ui-corner-all");
 
-function loadSearchEngines(){
-	fetch("engines.json")
-		.then(response => response.json())
-		.then(json => {
-			engines = json; 
-			queryByParameter();
-		});
-}
+	$("button").button();
 
-function queryByParameter() {
-	const urlParams = new URLSearchParams(window.location.search);
-	var keyword = urlParams.get("s");
-	var group = urlParams.get("g");
-	if (keyword) {
-		document.getElementById("keyword").setAttribute("value", keyword);
-		if (group) {
-			groupId = engines.map(eng => eng.group).indexOf(group);
-			if(groupId && groupId != -1){
-				document.getElementById("engineGroup").value = groupId;
+	function restoreOptions(index = 0) {
+		const urlParams = new URLSearchParams(window.location.search);
+		const query = urlParams.get("s");
+		const bundleId = urlParams.get("b");
+		self.model.loadModel(function () {
+			if (bundleId) {
+				self.model.setSelectedBundleIndexByValue(bundleId);
+			} else {
+				self.model.setSelectedBundleIndex(index);
 			}
+			updateView();
+			if (query) {
+				$("#query").val(query);
+				search();
+			}
+		});
+
+	}
+
+	function updateView() {
+		updateBundleSelect();
+		var bundle = self.model.getBundle();
+		if (bundle) {
+			bundleSelect.val(bundle.bundle_id);
 		}
-		search();
+		bundleSelect.selectmenu("refresh");
+		updatePanelsView(bundle);
 	}
-}
 
-function updateURLSearchParams(keyword, group) {
-	window.history.pushState({s: keyword, g: group}, "ManiQuest", `?s=${keyword}&g=${group}`);
-}
-
-function searchFocusShortcut(e) {
-	var key = e.which || e.keyCode;
-	if (key == 19 && e.ctrlKey) { // ctrl + 's'
-		// console.log(Date.now() + " : " + key);
-		focusAndSelectSearch();
+	function changeBundleSelection(event, data) {
+		var bundleId = data.item.value;
+		self.model.setSelectedBundleIndexByValue(bundleId);
+		updatePanelsView();
 	}
-}
 
-function addFocusShortcut(){
-	document.addEventListener("keypress", searchFocusShortcut, true);
-	document.getElementById("keyword").addEventListener("click", focusAndSelectSearch);
-	// cross origin security blocking error
-	// var iframe1 = document.getElementById("iframe1");
-	// iframe1.contentWindow.addEventListener('keypress', searchFocusShortcut)	;
-}
+	function updateBundleSelect() {
+        bundleSelect.find("option").remove();
+        $.each(self.model.bundles, function () {
+            bundleSelect.append($("<option />").val(this.bundle_id).text(this.bundle_name));
+        });
+       var bundle = self.model.getBundle();
+     }
 
-function focusAndSelectSearch(){
-	var searchInput = document.getElementById("keyword");
-	searchInput.select();
-}
+	function updatePanelsView() {
+		var bundle = self.model.getBundle();
 
+		$("#search-panels").children(".search-panel").remove();
+
+		if (!bundle) return;
+
+		var numPanels = bundle.bundle_engines.length;
+		for (var i = 0; i < numPanels; i++) {
+			var engs = bundle.bundle_engines[i];
+			var bundleEl = createPanel(i, numPanels, $("#search-panels"), engs);
+		}
+	}
+
+	function createPanel(index, numPanels, container, engines = []) {
+		var mainEngine = "";
+		if (engines && engines.length > 0) {
+			mainEngine = engines[0];
+		}
+		var bundleEl = $(
+			`<div class="search-panel split-1-${numPanels} l-box ui-header-reset">` +
+			'    <h3 class="panel-header ui-corner-top ui-state-default">' +
+			`${mainEngine.engine}` +
+			'    </h3>' +
+			'    <div class="panel-content">' +
+			`        <iframe src="about:blank" id="iframe-${index}" seamless></iframe>` +
+			'    </div>' +
+			'</div>');
+
+		bundleEl.data("url", mainEngine.url);
+		container.append(bundleEl);
+		// var enginesListEl = createIframe(index, engines);
+		// bundleEl.find(".panel-content").append(enginesListEl);
+	}
+
+	restoreOptions();
+
+	$("#search-button").click(search);
+		
+	function search() {
+		var bundle = self.model.getBundle();
+		var query = $("#query").val();
+		$(".panel-content iframe").each(function(i, iframe) {
+			var url = $(iframe).closest(".search-panel").data("url");
+			if (url) {
+				$(iframe).attr("src", url.replace("%s", query));
+			}
+		})
+
+		updateURLSearchParams(query, bundle.bundle_id);
+	}
+
+	function updateURLSearchParams(query, bundle) {
+		window.history.pushState({ s: query, b: bundle }, "ManiQuest", `?s=${query}&b=${bundle}`);
+	}
+
+	$("#query").click(function(event) {
+		event.target.select();
+	});
+	
+	$(document).keypress(function (event) {
+		var key = event.which || event.keyCode;
+		if (key == 19 && event.ctrlKey) { // ctrl + 's'
+			// console.log(Date.now() + " : " + key);
+			$("#query").select();
+		}
+	});
+});
 
