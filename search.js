@@ -11,6 +11,15 @@ $(document).ready(function () {
 
 	$("button").button();
 
+	$("#bundle-config").button({
+		icon: "ui-icon-gear",
+		showLabel: true
+	});
+
+	$("#bundle-config").click(function(event) {
+		window.open("config.html");
+	});
+
 	function restoreOptions(index = 0) {
 		const urlParams = new URLSearchParams(window.location.search);
 		const query = urlParams.get("s");
@@ -75,8 +84,8 @@ $(document).ready(function () {
 		}
 		var bundleEl = $(
 			`<div class="search-panel split-1-${numPanels} l-box ui-header-reset">` +
-			'    <h3 class="panel-header ui-corner-top ui-state-default">' +
-			`${mainEngine.engine}` +
+			'    <h3 class="search-panel-header panel-header ui-corner-top ui-state-default">' +
+			`        ${mainEngine.engine}` +
 			'    </h3>' +
 			'    <div class="panel-content">' +
 			`        <iframe src="about:blank" id="iframe-${index}" seamless></iframe>` +

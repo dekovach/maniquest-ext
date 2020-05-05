@@ -22,7 +22,7 @@
       "48": "images/get_started48.png",
       "128": "images/get_started128.png"
     },
-    "options_page": "options.html",
+    "options_page": "config.html",
 	"manifest_version": 2,
 	"web_accessible_resources": ["search.html"]
 }

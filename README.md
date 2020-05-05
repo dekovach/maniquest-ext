@@ -6,5 +6,7 @@
 * Package
 * Options page with search engine management, grouping and ordering
   * Simple JSON edit page
-  * Fancy drag and drop options page (based on Vue.js)
+  * ✓ Fancy drag and drop options page (based on Vue.js)
 * Pipeline for packaging and releasing
+* Improvements
+  * Jump from search to options for the same config

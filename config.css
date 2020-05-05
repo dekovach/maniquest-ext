@@ -41,6 +41,10 @@ span.panel-delete {
     width: calc(20% - 1.6em);
 }
 
+.split-1-6 {
+    width: calc(16.667% - 1.6em);
+}
+
 .ui-state-highlight {
     height: 90vh;
 }
@@ -54,6 +58,10 @@ span.panel-delete {
     font-size: 100%;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px;
+}
+
+.search-panel-header {
+    cursor: default;
 }
 
 .action-icon {
