@@ -13,4 +13,5 @@
   * Jump from search to options for the same config
   * Styling
   * logo + reload on logo click
+  * Extension icon
 * Reposnive layout?
