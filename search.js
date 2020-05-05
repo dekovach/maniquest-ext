@@ -128,6 +128,10 @@ $(document).ready(function () {
 	restoreOptions();
 
 	$("#search-button").click(search);
+	$("#query").keyup(function (event) {
+		if (event.keyCode == 13) // enter key
+			search();
+	});
 
 	function search() {
 		var bundle = self.model.getBundle();
