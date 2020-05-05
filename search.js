@@ -16,7 +16,7 @@ $(document).ready(function () {
 		showLabel: true
 	});
 
-	$("#bundle-config").click(function(event) {
+	$("#bundle-config").click(function (event) {
 		window.open("config.html");
 	});
 
@@ -56,12 +56,12 @@ $(document).ready(function () {
 	}
 
 	function updateBundleSelect() {
-        bundleSelect.find("option").remove();
-        $.each(self.model.bundles, function () {
-            bundleSelect.append($("<option />").val(this.bundle_id).text(this.bundle_name));
-        });
-       var bundle = self.model.getBundle();
-     }
+		bundleSelect.find("option").remove();
+		$.each(self.model.bundles, function () {
+			bundleSelect.append($("<option />").val(this.bundle_id).text(this.bundle_name));
+		});
+		var bundle = self.model.getBundle();
+	}
 
 	function updatePanelsView() {
 		var bundle = self.model.getBundle();
@@ -79,13 +79,21 @@ $(document).ready(function () {
 
 	function createPanel(index, numPanels, container, engines = []) {
 		var mainEngine = "";
+		var selectMenuString = "";
+
 		if (engines && engines.length > 0) {
 			mainEngine = engines[0];
+			if (engines.length > 1) {
+				// has alternatives
+				selectMenuString = '<span class="header-right"><select class="alternatives-menu"> </select><span> ';
+			}
 		}
 		var bundleEl = $(
 			`<div class="search-panel split-1-${numPanels} l-box ui-header-reset">` +
+			// '    <div class="alternatives"></div>' +
 			'    <h3 class="search-panel-header panel-header ui-corner-top ui-state-default">' +
 			`        ${mainEngine.engine}` +
+			selectMenuString +
 			'    </h3>' +
 			'    <div class="panel-content">' +
 			`        <iframe src="about:blank" id="iframe-${index}" seamless></iframe>` +
@@ -94,18 +102,37 @@ $(document).ready(function () {
 
 		bundleEl.data("url", mainEngine.url);
 		container.append(bundleEl);
-		// var enginesListEl = createIframe(index, engines);
-		// bundleEl.find(".panel-content").append(enginesListEl);
+
+		if (selectMenuString.length > 0) {
+			var alternativesMenuSelect = bundleEl.find("select.alternatives-menu");
+			for (var i = 1; i < engines.length; i++) {
+				var optionEl = $("<option />").val(engines[i].url).text(engines[i].engine);
+				alternativesMenuSelect.append(optionEl);
+			}
+
+			alternativesMenuSelect.selectmenu({
+				classes: {
+					"ui-selectmenu-button": "alternatives-menu ui-button-icon-only demo-splitbutton-select"
+				},
+				position: { my: "right top", at: "right bottom", collision: "flip" },
+				select: function (event, data) {
+					var query = $("#query").val();
+					var url = data.item.value;
+					url = url.replace("%s", query);
+					window.open(url, "_blank");
+				}
+			});
+		}
 	}
 
 	restoreOptions();
 
 	$("#search-button").click(search);
-		
+
 	function search() {
 		var bundle = self.model.getBundle();
 		var query = $("#query").val();
-		$(".panel-content iframe").each(function(i, iframe) {
+		$(".panel-content iframe").each(function (i, iframe) {
 			var url = $(iframe).closest(".search-panel").data("url");
 			if (url) {
 				$(iframe).attr("src", url.replace("%s", query));
@@ -119,10 +146,10 @@ $(document).ready(function () {
 		window.history.pushState({ s: query, b: bundle }, "ManiQuest", `?s=${query}&b=${bundle}`);
 	}
 
-	$("#query").click(function(event) {
+	$("#query").click(function (event) {
 		event.target.select();
 	});
-	
+
 	$(document).keypress(function (event) {
 		var key = event.which || event.keyCode;
 		if (key == 19 && event.ctrlKey) { // ctrl + 's'

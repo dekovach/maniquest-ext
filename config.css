@@ -164,3 +164,8 @@ h1 {
 #query {
     width: 20em;
 }
+
+.alternatives-menu {
+    border: none;
+    padding-bottom: 0;
+}
