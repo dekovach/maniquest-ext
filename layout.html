@@ -19,19 +19,30 @@
 
 <body>
     <div id="bundle-header" class="header-fieldset">
-        <label for="bundle-select">Bundle</label>
-        <select id="bundle-select">
-        </select>
-        <label for="bundle-id">Bundle Id</label>
-        <input type="text" name="bundle-id" id="bundle-id" value="" class="text ui-widget-content ui-corner-all" />
-        <label for="bundle-name">Bundle Name</label>
-        <input type="text" name="bundle-name" id="bundle-name" value="" class="text ui-widget-content ui-corner-all" />
-        <label for="bundle-keyword">Keyword</label>
-        <input type="text" name="bundle-keyword" id="bundle-keyword" value=""
-            class="text ui-widget-content ui-corner-all" />
-        <button id="add-panel" class="">Add Panel</button>
-        <button class="action-button ui-button ui-widget ui-corner-all">Cancel</button>
-        <button id="save-bundle" class="action-button ui-button ui-widget ui-corner-all">Save Bundle Config</button>
+        <fieldset class="header-left">
+            <label for="bundle-select">Bundle</label>
+            <select id="bundle-select">
+            </select>
+        </fieldset>
+        <fieldset id="config-form-fieldset" class="header-left">
+            <label for="bundle-id">Bundle Id</label>
+            <input type="text" name="bundle-id" id="bundle-id" value="" class="text ui-widget-content ui-corner-all" />
+            <label for="bundle-name">Bundle Name</label>
+            <input type="text" name="bundle-name" id="bundle-name" value=""
+                class="text ui-widget-content ui-corner-all" />
+            <label for="bundle-keyword">Keyword</label>
+            <input type="text" name="bundle-keyword" id="bundle-keyword" value=""
+                class="text ui-widget-content ui-corner-all" />
+            <button id="add-panel" class="">Add Panel</button>
+        </fieldset>
+        <fieldset id="config-action-buttonset">
+            <button id="save-bundle-config" class="action-button ui-button ui-widget ui-corner-all">Save Bundle Config</button>
+            <button id="cancel-bundle-config" class="action-button ui-button ui-widget ui-corner-all">Cancel</button>
+            <select id="bundle-action">
+                <option value="delete-config">Delete config</option>
+                <option disabled>Change order</option>
+            </select>
+        </fieldset>
     </div>
     <br />
     <div id="engines" class="">

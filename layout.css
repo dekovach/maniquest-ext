@@ -89,9 +89,21 @@ span.action-icon {
     float: right;
 }
 
-#bundle-header .action-button {
+.header-left{
+    float: left;
+}
+
+#config-action-buttonset {
     float: right;
 }
+
+#bundle-header {
+    display: flow-root;
+}
+
+.ui-button-icon-only.demo-splitbutton-select {
+    width: 1em;
+  }
 
 .header-fieldset label,
 .header-fieldset input {

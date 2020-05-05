@@ -4,30 +4,62 @@ $(document).ready(function () {
     var self = this;
     self.model = {
         bundles: [],
-        selectedBundleIndex: 0,
+        selectedBundleIndex: -1,
 
-        setSelectedBundleIndexByValue: function(value) {
+        setBundles: function (bundles, index = -1) {
+            if (bundles && bundles.length > 0) {
+                this.bundles = bundles;
+                index = Math.min(this.bundles.length - 1, index);
+                // index = Math.max(0, index);
+                this.selectedBundleIndex = index;
+            }
+            // } else {
+            //     this.addEmptyBundle();
+            // }
+
+        },
+
+        setSelectedBundleIndexByValue: function (value) {
             this.selectedBundleIndex = this.bundles.findIndex(item => item.bundle_id == value);
         },
 
-        addEmptyBundle: function() {
+        addEmptyBundle: function () {
             this.bundles.push({
-                    "bundle_id": "",
-                    "bundle_name": "",
-                    "bundle_keyword": "",
-                    "bundle_engines": [[], []]
+                "bundle_id": "",
+                "bundle_name": "",
+                "bundle_keyword": "",
+                "bundle_engines": [[], []]
             });
             this.selectedBundleIndex = this.bundles.length - 1;
         },
 
-        getBundle: function () {
-            return this.bundles[this.selectedBundleIndex];
+        removeEmptyBundle: function () {
+            var len = this.bundles.length;
+            if (len > 0 && this.bundles[len-1].bundle_id == "") {
+                this.bundles.pop();
+            }
         },
 
-        persistModel: function() {
+        getBundle: function () {
+            if (this.selectedBundleIndex > -1) {
+                return this.bundles[this.selectedBundleIndex];
+            } else {
+                return null;
+            }
+        },
+
+        removeBundle: function () {
+            this.bundles.splice(this.selectedBundleIndex, 1);
+            this.selectedBundleIndex = -1;
+            // if (this.bundles.length == 0) {
+            //     this.addEmptyBundle();
+            // } 
+        },
+
+        persistModel: function () {
             chrome.storage.local.set({
                 config_data: this.bundles
-            }, function() {});
+            }, function () { });
         }
     }
     // var bundles = [];
@@ -38,6 +70,31 @@ $(document).ready(function () {
         select: changeBundleSelection
     });
 
+    var bundleActionSelect = $("#bundle-action").selectmenu({
+        classes: {
+            "ui-selectmenu-button": "ui-button-icon-only demo-splitbutton-select"
+        },
+        position: { my: "right top", at: "right bottom", collision: "flip" },
+        select: function (event, data) {
+            if (data.item.value == "delete-config") {
+                self.model.removeBundle();
+                self.model.persistModel();
+                restoreOptions();
+            }
+        },
+
+    });
+
+    bundleActionSelect.enableOption = function(optionValue) {
+        $("#bundle-action").val("delete-config").attr("disabled", false);
+        $("#bundle-action").selectmenu("refresh");
+    };
+
+    bundleActionSelect.disableOption = function(optionValue) {
+        $("#bundle-action").val("delete-config").attr("disabled", true);
+        $("#bundle-action").selectmenu("refresh");
+    };
+
     $("#bundle-header .action-button").button();
 
     var panelsSortable = $("#search-panels").sortable({
@@ -46,18 +103,27 @@ $(document).ready(function () {
         containment: "#search-panels"
     }).disableSelection();
 
-    function restoreOptions() {
+    function restoreOptions(index) {
         chrome.storage.local.get({
             config_data: []
         }, function (data) {
-            self.model.bundles = data.config_data;
-            self.model.selectedBundleIndex = 0;
-            updateBundleSelect();
-            var bundle = self.model.getBundle();
-            bundleSelect.val(bundle.bundle_id).selectmenu("refresh");
-            updateBundleHeader(bundle)
-            updatePanelsView(bundle);
+            self.model.setBundles(data.config_data, index);
+            updateView();
         });
+    }
+
+    function updateView() {
+        updateBundleSelect();
+        var bundle = self.model.getBundle();
+        if (bundle) {
+            bundleSelect.val(bundle.bundle_id);
+        } else {
+            $("#config-form-fieldset").hide();
+            $("#config-action-buttonset").hide();
+        }
+        bundleSelect.selectmenu("refresh");
+        updateBundleHeader()
+        updatePanelsView(bundle);
     }
 
     function changeBundleSelection(event, data) {
@@ -65,31 +131,47 @@ $(document).ready(function () {
         var bundleId = data.item.value;
         if (bundleId == NEW_BUNDLE_OPTION) {
             self.model.addEmptyBundle();
+            bundleActionSelect.disableOption("delete-config");
         } else {
+            self.model.removeEmptyBundle();
             self.model.setSelectedBundleIndexByValue(bundleId);
+            bundleActionSelect.enableOption("delete-config");
         }
         updateBundleHeader();
         updatePanelsView();
     }
-
+    
     function updateBundleSelect() {
+        bundleSelect.find("option").remove();
+        bundleSelect.append($("<option disabled hidden selected value/>"))
         $.each(self.model.bundles, function () {
             bundleSelect.append($("<option />").val(this.bundle_id).text(this.bundle_name));
         });
-        bundleSelect.append( $("<option />").val(NEW_BUNDLE_OPTION).text("New Bundle...") );
-    }
+        bundleSelect.append($("<option />").val(NEW_BUNDLE_OPTION).text("New Bundle..."));
+     }
 
     function updateBundleHeader() {
         var bundle = self.model.getBundle();
-        $("#bundle-id").val(bundle.bundle_id);
-        $("#bundle-name").val(bundle.bundle_name);
-        $("#bundle-keyword").val(bundle.bundle_keyword);
+        if (bundle) {
+            $("#bundle-id").val(bundle.bundle_id);
+            $("#bundle-name").val(bundle.bundle_name);
+            $("#bundle-keyword").val(bundle.bundle_keyword);
+
+            $("#config-form-fieldset").show();
+            $("#config-action-buttonset").show();
+        } else {
+            $("#bundle-id").val("");
+            $("#bundle-name").val("");
+            $("#bundle-keyword").val("");
+        }
     }
 
     function updatePanelsView() {
         var bundle = self.model.getBundle();
 
         panelsSortable.children(".search-panel").remove();
+
+        if (!bundle) return;
 
         var numPanels = bundle.bundle_engines.length;
         for (var i = 0; i < numPanels; i++) {
@@ -272,22 +354,23 @@ $(document).ready(function () {
         autoOpen: false
     });
 
-    $("#save-bundle").click(function (event) {
+    $("#save-bundle-config").click(function (event) {
         var bundle_id = $("#bundle-id").val();
         var bundle_name = $("#bundle-name").val();
         var bundle_keyword = $("#bundle-keyword").val();
 
+        var bundle = self.model.getBundle();
+
         var valid = true;
         valid &= bundle_id.trim().length > 0;
-        valid &= self.model.bundles.every((item) => item.bundle_id != bundle_id);
         valid &= bundle_name.trim().length > 0;
+        valid &= bundle && bundle.bundle_id.length > 0 || self.model.bundles.every((item) => item.bundle_id != bundle_id);
 
         if (!valid) {
             alert("Config can't be saved! \nBundle id and name must be unique and non-empty.");
             return;
         }
 
-        var bundle = self.model.getBundle();
         bundle.bundle_id = bundle_id;
         bundle.bundle_name = bundle_name;
         bundle.bundle_keyword = bundle_keyword;
@@ -309,6 +392,15 @@ $(document).ready(function () {
 
         // console.log(self.model.bundles);
         self.model.persistModel();
+        restoreOptions(self.model.selectedBundleIndex);
+    });
+
+    $("#cancel-bundle-config").click(function (event) {  
+        var bundleId = $("#bundle-select").val();  
+        if (bundleId == NEW_BUNDLE_OPTION) {
+            self.model.removeEmptyBundle();
+        }
+        restoreOptions();
     });
 
 });
